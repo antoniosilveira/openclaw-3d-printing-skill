@@ -211,6 +211,44 @@ python3 /path/to/openclaw/skills/skill-creator/scripts/package_skill.py . ./dist
 
 That should produce a `.skill` artifact in `dist/`.
 
+## Publish on ClawHub
+
+Recommended publish metadata for this repo:
+
+- **slug**: `openclaw-3d-printing-skill`
+- **name**: `OpenClaw 3D Printing Skill`
+- **version**: use semver like `1.0.0`, `1.0.1`, `1.1.0`
+- **tags**: keep `latest`
+
+Login first:
+
+```bash
+clawhub login
+clawhub whoami
+```
+
+Then publish from the repo root:
+
+```bash
+clawhub skill publish . \
+  --slug openclaw-3d-printing-skill \
+  --name "OpenClaw 3D Printing Skill" \
+  --version 1.0.0 \
+  --tags latest \
+  --changelog "Initial public release"
+```
+
+For later updates, bump the version and changelog:
+
+```bash
+clawhub skill publish . \
+  --slug openclaw-3d-printing-skill \
+  --name "OpenClaw 3D Printing Skill" \
+  --version 1.0.1 \
+  --tags latest \
+  --changelog "Docs and install improvements"
+```
+
 ## Example usage
 
 See `examples/` for short briefs you can adapt:
