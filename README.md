@@ -29,19 +29,98 @@ OpenClaw should then discover the root `SKILL.md` automatically.
 
 ## Python and CadQuery requirements
 
-This project expects a Python environment that can install CadQuery and the preview stack.
+Use **Python 3.10 to 3.12**. Python 3.13+ is not recommended for this skill yet because CadQuery wheel support is less reliable there.
 
-See `references/requirements.txt` for the dependency list.
+This repo also expects a CadQuery-capable Python environment plus the preview stack from `references/requirements.txt`.
 
-Typical setup:
+### Recommended install paths
+
+- **macOS**: use Python 3.12 and a local `venv`
+- **Linux x86_64**: try Python 3.12 and a local `venv` first
+- **Linux arm64 / Raspberry Pi**: prefer **micromamba + conda-forge** for CadQuery
+
+### macOS setup
+
+Install Python 3.12 with Homebrew:
 
 ```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-pip install -r references/requirements.txt
+brew install python@3.12
 ```
 
-CadQuery wheel support is best on Python 3.10 to 3.12.
+Create a project-local environment and install dependencies:
+
+```bash
+cd ~/.openclaw/workspace/skills/openclaw-3d-printing-skill
+/opt/homebrew/bin/python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -r references/requirements.txt
+```
+
+Verify:
+
+```bash
+python - <<'PY'
+import cadquery as cq
+print("CadQuery OK", cq.__version__)
+PY
+```
+
+### Linux setup (x86_64)
+
+Install Python 3.12 using your distro package manager if available, then:
+
+```bash
+cd ~/.openclaw/workspace/skills/openclaw-3d-printing-skill
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -r references/requirements.txt
+```
+
+Verify:
+
+```bash
+python - <<'PY'
+import cadquery as cq
+print("CadQuery OK", cq.__version__)
+PY
+```
+
+### Linux setup (arm64 / Raspberry Pi)
+
+CadQuery installation is usually more reliable through conda-forge than plain `pip` on arm64.
+
+Install micromamba:
+
+```bash
+cd /tmp
+curl -L micro.mamba.pm/install.sh | bash
+source ~/.bashrc
+```
+
+Create the environment:
+
+```bash
+micromamba create -n cadquery312 -c conda-forge python=3.12 cadquery -y
+micromamba activate cadquery312
+python -m pip install -r ~/.openclaw/workspace/skills/openclaw-3d-printing-skill/references/requirements.txt
+```
+
+Verify:
+
+```bash
+python - <<'PY'
+import cadquery as cq
+print("CadQuery OK", cq.__version__)
+PY
+```
+
+### Common pitfalls
+
+- `pip install cadquery` may resolve to the **legacy CadQuery 1.x** package on some systems. If you see `freecad_impl` or a `FreeCAD` import error, you installed the wrong package.
+- If preview validation fails with `ModuleNotFoundError: trimesh`, install the rest of the dependencies from `references/requirements.txt`.
+- Keep the modeling environment separate from your system Python.
 
 ## Packaging the skill
 
