@@ -4,6 +4,21 @@ An OpenClaw-native skill for designing **parametric 3D-printable parts** with **
 
 It helps an agent gather requirements, model physical parts parametrically, export STL or 3MF files, render previews, and iterate on fit, tolerances, and printability.
 
+## Quick start
+
+1. Install the skill into your OpenClaw skills directory.
+2. Use **Python 3.10 to 3.12** only.
+3. Install CadQuery using the platform guidance below.
+4. Verify `import cadquery as cq` works before trying previews or exports.
+
+## Install matrix
+
+| Platform | Recommended Python | Recommended CadQuery install path |
+|---|---|---|
+| macOS | 3.12 | Homebrew Python + `venv` + `pip install -r references/requirements.txt` |
+| Linux x86_64 | 3.12 | `venv` + `pip install -r references/requirements.txt` |
+| Linux arm64 / Raspberry Pi | 3.12 | `micromamba` + `conda-forge` for CadQuery, then `pip install -r references/requirements.txt` |
+
 ## What it includes
 
 - `SKILL.md` with trigger and workflow guidance
@@ -31,7 +46,12 @@ OpenClaw should then discover the root `SKILL.md` automatically.
 
 Use **Python 3.10 to 3.12**. Python 3.13+ is not recommended for this skill yet because CadQuery wheel support is less reliable there.
 
-This repo also expects a CadQuery-capable Python environment plus the preview stack from `references/requirements.txt`.
+This repo expects:
+- a working CadQuery install
+- the preview/export helper dependencies from `references/requirements.txt`
+- an isolated environment instead of system Python
+
+Before doing anything else, verify CadQuery imports cleanly in the environment you plan to use.
 
 ### Recommended install paths
 
@@ -121,6 +141,8 @@ PY
 - `pip install cadquery` may resolve to the **legacy CadQuery 1.x** package on some systems. If you see `freecad_impl` or a `FreeCAD` import error, you installed the wrong package.
 - If preview validation fails with `ModuleNotFoundError: trimesh`, install the rest of the dependencies from `references/requirements.txt`.
 - Keep the modeling environment separate from your system Python.
+- On Linux arm64, do not assume plain `pip` will be the easiest route for CadQuery. Prefer `micromamba` first.
+- If `micromamba activate` does not work in a fresh shell, initialize the shell hook first or source your shell rc file.
 
 ## Packaging the skill
 
