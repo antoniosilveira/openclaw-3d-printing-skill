@@ -5,6 +5,8 @@ description: Create parametric 3D-printable parts and enclosures with CadQuery, 
 
 # Parametric 3D Printing
 
+Design brackets, clips, cable guides, holders, mounts, adapters, enclosures, fixtures, and other functional 3D-printable parts with CadQuery. Generate clean STL or 3MF outputs, review fit and printability, and iterate quickly.
+
 Use CadQuery as the default modeling path. Keep models parametric, dimensioned in millimeters, and easy to revise.
 
 ## Workflow

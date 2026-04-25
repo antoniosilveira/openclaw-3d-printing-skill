@@ -6,10 +6,22 @@ It helps an agent gather requirements, model physical parts parametrically, expo
 
 ## Quick start
 
-1. Install the skill into your OpenClaw skills directory.
+1. Install the skill from ClawHub or clone the repo into your OpenClaw skills directory.
 2. Use **Python 3.10 to 3.12** only.
 3. Install CadQuery using the platform guidance below.
 4. Verify `import cadquery as cq` works before trying previews or exports.
+
+## Install from ClawHub
+
+```bash
+openclaw skills install openclaw-3d-printing-skill
+```
+
+Or with the ClawHub CLI:
+
+```bash
+clawhub install openclaw-3d-printing-skill
+```
 
 ## 5-minute setup
 
