@@ -11,6 +11,43 @@ It helps an agent gather requirements, model physical parts parametrically, expo
 3. Install CadQuery using the platform guidance below.
 4. Verify `import cadquery as cq` works before trying previews or exports.
 
+## 5-minute setup
+
+### macOS
+
+```bash
+git clone https://github.com/antoniosilveira/openclaw-3d-printing-skill.git ~/.openclaw/workspace/skills/openclaw-3d-printing-skill
+cd ~/.openclaw/workspace/skills/openclaw-3d-printing-skill
+brew install python@3.12
+/opt/homebrew/bin/python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -r references/requirements.txt
+```
+
+### Linux x86_64
+
+```bash
+git clone https://github.com/antoniosilveira/openclaw-3d-printing-skill.git ~/.openclaw/workspace/skills/openclaw-3d-printing-skill
+cd ~/.openclaw/workspace/skills/openclaw-3d-printing-skill
+python3.12 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip setuptools wheel
+python -m pip install -r references/requirements.txt
+```
+
+### Linux arm64 / Raspberry Pi
+
+```bash
+git clone https://github.com/antoniosilveira/openclaw-3d-printing-skill.git ~/.openclaw/workspace/skills/openclaw-3d-printing-skill
+cd /tmp
+curl -L micro.mamba.pm/install.sh | bash
+source ~/.bashrc
+micromamba create -n cadquery312 -c conda-forge python=3.12 cadquery -y
+micromamba activate cadquery312
+python -m pip install -r ~/.openclaw/workspace/skills/openclaw-3d-printing-skill/references/requirements.txt
+```
+
 ## Install matrix
 
 | Platform | Recommended Python | Recommended CadQuery install path |
@@ -136,13 +173,33 @@ print("CadQuery OK", cq.__version__)
 PY
 ```
 
-### Common pitfalls
+## First successful test
 
-- `pip install cadquery` may resolve to the **legacy CadQuery 1.x** package on some systems. If you see `freecad_impl` or a `FreeCAD` import error, you installed the wrong package.
-- If preview validation fails with `ModuleNotFoundError: trimesh`, install the rest of the dependencies from `references/requirements.txt`.
-- Keep the modeling environment separate from your system Python.
-- On Linux arm64, do not assume plain `pip` will be the easiest route for CadQuery. Prefer `micromamba` first.
-- If `micromamba activate` does not work in a fresh shell, initialize the shell hook first or source your shell rc file.
+Run this after setup in the same environment you plan to use for the skill:
+
+```bash
+python - <<'PY'
+import cadquery as cq
+box = cq.Workplane("XY").box(10, 20, 5)
+cq.exporters.export(box, "test_box.stl")
+print("CadQuery OK", cq.__version__)
+print("STL export OK")
+PY
+```
+
+If that works, your CadQuery environment is ready for the skill.
+
+## Troubleshooting
+
+| Symptom | Likely cause | Fix |
+|---|---|---|
+| `ModuleNotFoundError: No module named 'cadquery'` | CadQuery is not installed in the active environment | Activate the right `venv` or `micromamba` env and reinstall |
+| `freecad_impl` or `No module named 'FreeCAD'` | You installed the legacy CadQuery 1.x package | Do not use plain `pip install cadquery`; use the recommended setup above |
+| `ModuleNotFoundError: trimesh` | Preview/export helper dependencies are missing | Run `python -m pip install -r references/requirements.txt` |
+| `python3.12: command not found` | Python 3.12 is not installed or not on PATH | Install Python 3.12 first, then recreate the environment |
+| `micromamba: command not found` | Micromamba is not installed or shell is not initialized | Install micromamba, then `source ~/.bashrc` or initialize the shell hook |
+| `micromamba activate ...` does not work | Shell hook is not loaded | Run `eval "$($HOME/.local/bin/micromamba shell hook --shell bash)"` |
+| CadQuery installs on Linux arm64 but import still fails | Wheel/solver mismatch or wrong environment | Recreate the env with `micromamba create -n cadquery312 -c conda-forge python=3.12 cadquery -y` |
 
 ## Packaging the skill
 
